@@ -14,10 +14,6 @@ use App\Models\Order;
 |
 */
 
-$router->get('/', function () use ($router) {
-    $orders = Order::simplePaginate(4);
-  
-    return view('home', compact('orders'));
-});
+$router->get('/', 'OrdersController@getListOrders');
 
 $router->post('/addOrder', 'OrdersController@addOrder');

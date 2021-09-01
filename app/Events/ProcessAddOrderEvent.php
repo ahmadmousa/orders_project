@@ -16,7 +16,6 @@ class ProcessAddOrderEvent extends Event
      */
     public function __construct($newOredr)
     {
-    
         $this-> order = $newOredr;
     }
 }

@@ -12,6 +12,7 @@ use Illuminate\Foundation\Event\Dispatchable;
 
 use App\Events\ProcessAddOrderEvent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 // use Illuminate\Queue;
 class OrdersController extends Controller
 {
@@ -19,9 +20,9 @@ class OrdersController extends Controller
     public function addOrder(Request $request){
    
       
-      event(new ProcessAddOrderEvent($this->createNewOrder($request)));
-      
-     // dispatch(new ProcessOrder($request));
+      event(new ProcessAddOrderEvent(json_encode($request->all())));
+  
+    //  dispatch(new ProcessOrder($this->createNewOrder($request)));
    
     return response()->json([
         'status' => 200,
@@ -29,21 +30,10 @@ class OrdersController extends Controller
     ]);
     }
 
-   private function createNewOrder( $request){
-    $newOrder = new Order();
-    $newOrder->notes = $request->input('notes');
-    $newOrder->restaurant_id = $request->input('restaurant_id');
-    $newOrder->dish_id = $request->input('dish_id');
-    $newOrder->user_id = $request->input('user_id');
-    $newOrder->quantity = $request->input('quantity');
-    $newOrder->price = $request->input('price');
-    $newOrder->netPrice = $request->input('price') * $request->input('quantity');
-    
-    $newOrder->city = $request->input('address.city');
-    $newOrder->address = $request->input('address.country');
+    public function getListOrders(){
+        $orders = Order::simplePaginate(4);
+        return $orders;
+    }
 
-    $newOrder->latitude = $request->input('address.geo.latitude');
-    $newOrder->longitude = $request->input('address.geo.longitude');
-    return $newOrder;
-   }
+
 }
